@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify 
 from flask_cors import CORS
 import smtplib
 import random
 import json
 import requests
+import os
 from email.message import EmailMessage
 
 app = Flask(__name__)
@@ -11,10 +12,9 @@ CORS(app)
 
 otp_store = {}
 
-FIREBASE_DB_URL = "https://chat-app-da6da-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"  # replace this
-
-SENDER_EMAIL = "shivamameta97@gmail.com"  # replace
-APP_PASSWORD = "tjru mndg ybst gyie"     # replace
+FIREBASE_DB_URL = os.environ.get("FIREBASE_DB_URL")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+APP_PASSWORD = os.environ.get("APP_PASSWORD")
 
 @app.route('/send-otp', methods=['POST'])
 def send_otp():
@@ -50,7 +50,6 @@ def verify_otp():
     otp = data.get('otp')
 
     if otp_store.get(email) == otp:
-        # Save to Firebase
         user_data = {"email": email}
         firebase = requests.post(FIREBASE_DB_URL, data=json.dumps(user_data))
         return jsonify({"message": "OTP verified and user registered"})
