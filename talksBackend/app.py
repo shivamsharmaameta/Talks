@@ -16,6 +16,10 @@ FIREBASE_DB_URL = os.environ.get("FIREBASE_DB_URL")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 APP_PASSWORD = os.environ.get("APP_PASSWORD")
 
+@app.route('/')
+def home():
+    return "Shivam's Chat App Backend is running!"
+
 @app.route('/send-otp', methods=['POST'])
 def send_otp():
     data = request.get_json()
